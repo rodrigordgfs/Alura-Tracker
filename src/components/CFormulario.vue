@@ -28,6 +28,8 @@ import CTemporizador from "./CTemporizador.vue";
 export default defineComponent({
   name: "CFormulario",
 
+  emits: ["onSaveTask"],
+
   components: {
     CTemporizador,
   },
@@ -53,9 +55,11 @@ export default defineComponent({
     },
 
     onCounterFinish(timeSeconds: number): void {
+      this.$emit("onSaveTask", {
+        description: this.task,
+        time: timeSeconds,
+      });
       this.task = "";
-      console.log(timeSeconds);
-      
     },
   },
 });
