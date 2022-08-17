@@ -11,28 +11,11 @@
           name="tarefa"
           id="tarefa"
           placeholder="Qual tarefa você deseja iniciar?"
+          v-model="task"
         />
       </div>
       <div class="column">
-        <div
-          class="is-flex is-align-items-center is-justify-content-space-between"
-        >
-          <section>
-            <strong>{{ elapsedTime }}</strong>
-          </section>
-          <button class="button" @click="handleStartCounter">
-            <span class="icon">
-              <i class="fas fa-play"></i>
-            </span>
-            <span>Play</span>
-          </button>
-          <button class="button" @click="handleStopCounter">
-            <span class="icon">
-              <i class="fas fa-stop"></i>
-            </span>
-            <span>Stop</span>
-          </button>
-        </div>
+        <CTemporizador @onCounterFinish="onCounterFinish" />
       </div>
     </div>
   </div>
@@ -40,33 +23,39 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import CTemporizador from "./CTemporizador.vue";
 
 export default defineComponent({
   name: "CFormulario",
+
+  components: {
+    CTemporizador,
+  },
 
   data() {
     return {
       timeSeconds: 0,
       counter: 0,
+      task: "",
     };
   },
 
-  computed: {
-    elapsedTime(): string {
-      return new Date(this.timeSeconds * 1000).toISOString().slice(11, -5);
-    },
-  },
-
   methods: {
-    handleStartCounter() : void {
+    handleStartCounter(): void {
       this.counter = setInterval(() => {
         this.timeSeconds += 1;
       }, 1000);
     },
 
-    handleStopCounter() : void  {
+    handleStopCounter(): void {
       clearInterval(this.counter);
       this.timeSeconds = 0;
+    },
+
+    onCounterFinish(timeSeconds: number): void {
+      this.task = "";
+      console.log(timeSeconds);
+      
     },
   },
 });
