@@ -1,9 +1,12 @@
 <template>
-  <main class="columns is-gapless is-multiline">
+  <main
+    class="columns is-gapless is-multiline"
+    :class="{ 'dark-mode': darkMode }"
+  >
     <div class="column is-one-quarter">
-      <CMenuLateral />
+      <CMenuLateral @onChangeTheme="handleChangeTheme" />
     </div>
-    <div class="column is-three-quarter">
+    <div class="column is-three-quarter content">
       <CFormulario @onSaveTask="handleSaveTask" />
       <div class="lista">
         <CBox :v-if="emptyTaskList">Você não está muito produtivo hoje :C</CBox>
@@ -34,6 +37,7 @@ export default defineComponent({
   data() {
     return {
       tasks: [] as ITask[],
+      darkMode: false,
     };
   },
 
@@ -47,6 +51,10 @@ export default defineComponent({
     handleSaveTask(task: ITask) {
       this.tasks.push(task);
     },
+
+    handleChangeTheme(darkMode: boolean) {
+      this.darkMode = darkMode;
+    },
   },
 });
 </script>
@@ -54,5 +62,19 @@ export default defineComponent({
 <style>
 .lista {
   padding: 1.23rem;
+}
+
+main {
+  --bg-primary: #fff;
+  --text-primary: #000;
+}
+
+main.dark-mode {
+  --bg-primary: #2b2d42;
+  --text-primary: #ddd;
+}
+
+.content {
+  background: var(--bg-primary);
 }
 </style>
