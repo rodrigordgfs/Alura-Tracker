@@ -8,8 +8,25 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/projects",
-    name: "Projetos",
     component: () => import("../views/VProjects.vue"),
+    children: [
+      {
+        path: "",
+        name: "Projetos",
+        component: () => import("../views/Projetos/VList.vue"),
+      },
+      {
+        path: "new",
+        name: "Novo Projeto",
+        component: () => import("../views/Projetos/VForm.vue"),
+      },
+      {
+        path: ":id",
+        name: "Editar Projeto",
+        component: () => import("../views/Projetos/VForm.vue"),
+        props: true,
+      },
+    ],
   },
 ];
 
