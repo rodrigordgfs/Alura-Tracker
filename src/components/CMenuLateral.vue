@@ -6,6 +6,22 @@
       type="repeat"
       :action="handleChangeTheme"
     />
+    <nav class="panel mt-5">
+      <ul>
+        <li>
+          <router-link to="/" class="link">
+            <i class="fas fa-tasks"></i>
+            Tarefas
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/projects" class="link">
+            <i class="fas fa-diagram"></i>
+            Projetos
+          </router-link>
+        </li>
+      </ul>
+    </nav>
   </header>
 </template>
 
@@ -51,6 +67,22 @@ header {
   height: 100vh;
   padding: 1rem;
   text-align: center;
+}
+
+.panel li {
+  margin: 8px 0;
+}
+
+.link {
+  color: #fff;
+}
+
+.link:hover {
+  color: #faf0ca;
+}
+
+.link.router-link-active {
+  color: #faf0ca;
 }
 
 @media only screen and (max-width: 768px) {

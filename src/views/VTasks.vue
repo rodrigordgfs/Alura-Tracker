@@ -14,7 +14,7 @@ import CTarefa from "../components/CTarefa.vue";
 import ITask from "../Interfaces/ITask";
 
 export default defineComponent({
-  name: "App",
+  name: "VTasks",
 
   components: {
     CFormulario,
