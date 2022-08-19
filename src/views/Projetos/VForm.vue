@@ -18,6 +18,8 @@
 </template>
 
 <script lang="ts">
+import useNotify from "@/hooks/useNotify";
+import { NotificationType } from "@/Interfaces/INotification";
 import { useStore } from "@/store";
 import { ADD_PROJECT, EDIT_PROJECT } from "@/utils/mutationsTypes";
 import { defineComponent } from "vue";
@@ -39,8 +41,10 @@ export default defineComponent({
 
   setup() {
     const store = useStore();
+    const { notify } = useNotify();
     return {
       store,
+      notify,
     };
   },
 
@@ -64,6 +68,11 @@ export default defineComponent({
         this.store.commit(ADD_PROJECT, this.projectName);
       }
       this.projectName = "";
+      this.notify(
+        NotificationType.SUCCESS,
+        "Sucesso",
+        "Projeto salvo com sucesso"
+      );
       this.$router.push("/projects");
     },
   },

@@ -7,6 +7,7 @@
       <CMenuLateral @onChangeTheme="handleChangeTheme" />
     </div>
     <div class="column is-three-quarter content">
+      <CNotification type="danger" title="teste" description="teste" />
       <router-view />
     </div>
   </main>
@@ -15,12 +16,14 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import CMenuLateral from "./components/CMenuLateral.vue";
+import CNotification from "./components/CNotification.vue";
 
 export default defineComponent({
   name: "App",
 
   components: {
     CMenuLateral,
+    CNotification,
   },
 
   data() {
