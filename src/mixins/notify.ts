@@ -1,6 +1,6 @@
 import { NotificationType } from "@/Interfaces/INotification";
 import { store } from "@/store";
-import { NOTIFY } from "@/utils/mutationsTypes";
+import { NOTIFY } from "@/store/constants/mutations";
 
 export const notifyMixin = {
   methods: {

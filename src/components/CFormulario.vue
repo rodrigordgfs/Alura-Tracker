@@ -13,7 +13,7 @@
             name="tarefa"
             id="tarefa"
             placeholder="Qual tarefa você deseja iniciar?"
-            v-model="task"
+            v-model="description"
           />
         </div>
       </div>
@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { key } from "@/store";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useStore } from "vuex";
 import CTemporizador from "./CTemporizador.vue";
 
@@ -53,42 +53,31 @@ export default defineComponent({
     CTemporizador,
   },
 
-  data() {
-    return {
-      timeSeconds: 0,
-      counter: 0,
-      task: "",
-      projectId: "",
-    };
-  },
-
-  setup() {
+  setup(props, { emit }) {
     const store = useStore(key);
-    return {
-      projects: computed(() => store.state.projects),
-    };
-  },
 
-  methods: {
-    handleStartCounter(): void {
-      this.counter = setInterval(() => {
-        this.timeSeconds += 1;
-      }, 1000);
-    },
+    const description = ref("");
+    const projectId = ref("");
 
-    handleStopCounter(): void {
-      clearInterval(this.counter);
-      this.timeSeconds = 0;
-    },
+    const projects = computed(() => store.state.project.projects);
 
-    onCounterFinish(timeSeconds: number): void {
-      this.$emit("onSaveTask", {
-        description: this.task,
+    const onCounterFinish = (timeSeconds: number) => {
+      emit("onSaveTask", {
+        description: description.value,
         time: timeSeconds,
-        project: this.projects.find((project) => project.id === this.projectId),
+        project: projects.value.find(
+          (project) => project.id === projectId.value
+        ),
       });
-      this.task = "";
-    },
+      description.value = "";
+    };
+
+    return {
+      projects,
+      description,
+      projectId,
+      onCounterFinish,
+    };
   },
 });
 </script>

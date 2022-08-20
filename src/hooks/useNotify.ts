@@ -1,6 +1,6 @@
 import { NotificationType } from "@/Interfaces/INotification";
 import { store } from "@/store";
-import { NOTIFY } from "@/utils/mutationsTypes";
+import { NOTIFY } from "@/store/constants/mutations";
 
 type useNotify = {
   notify: (type: NotificationType, title: string, description: string) => void;

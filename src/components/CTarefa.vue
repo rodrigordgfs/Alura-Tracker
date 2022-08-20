@@ -1,6 +1,6 @@
 <template>
   <CBox>
-    <div class="columns">
+    <div class="columns" @click="handleSelectedTask">
       <div class="column is-4">
         {{ task.description || "Tarefa sem descrição" }}
       </div>
@@ -28,10 +28,18 @@ export default defineComponent({
     CBox,
   },
 
+  emits: ["onSelectedTask"],
+
   props: {
     task: {
       type: Object as () => ITask,
       required: true,
+    },
+  },
+
+  methods: {
+    handleSelectedTask(): void {
+      this.$emit("onSelectedTask", this.task);
     },
   },
 });

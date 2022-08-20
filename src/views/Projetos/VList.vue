@@ -39,8 +39,10 @@
 </template>
 
 <script lang="ts">
+import useNotify from "@/hooks/useNotify";
+import { NotificationType } from "@/Interfaces/INotification";
 import { useStore } from "@/store";
-import { DELETE_PROJECT } from "@/utils/mutationsTypes";
+import { DELETE_PROJECT, GET_PROJECTS } from "@/store/constants/actions";
 import { computed, defineComponent } from "vue";
 
 export default defineComponent({
@@ -48,15 +50,33 @@ export default defineComponent({
 
   setup() {
     const store = useStore();
+    const { notify } = useNotify();
+    store.dispatch(GET_PROJECTS);
     return {
       store,
-      projects: computed(() => store.state.projects),
+      notify,
+      projects: computed(() => store.state.project.projects),
     };
   },
 
   methods: {
     handleDelete(id: string) {
-      this.store.commit(DELETE_PROJECT, id);
+      this.store
+        .dispatch(DELETE_PROJECT, id)
+        .then(() => {
+          this.notify(
+            NotificationType.SUCCESS,
+            "Sucesso",
+            "Projeto deletado com sucesso"
+          );
+        })
+        .catch(() => {
+          this.notify(
+            NotificationType.ERROR,
+            "Erro",
+            "Erro ao deletar o projeto"
+          );
+        });
     },
   },
 });

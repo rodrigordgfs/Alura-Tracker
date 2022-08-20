@@ -21,8 +21,9 @@
 import useNotify from "@/hooks/useNotify";
 import { NotificationType } from "@/Interfaces/INotification";
 import { useStore } from "@/store";
-import { ADD_PROJECT, EDIT_PROJECT } from "@/utils/mutationsTypes";
-import { defineComponent } from "vue";
+import { PATCH_PROJECT, POST_PROJECT } from "@/store/constants/actions";
+import { defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "VForm",
@@ -33,48 +34,63 @@ export default defineComponent({
     },
   },
 
-  data() {
-    return {
-      projectName: "",
-    };
-  },
-
-  setup() {
+  setup(props) {
     const store = useStore();
+    const router = useRouter();
     const { notify } = useNotify();
-    return {
-      store,
-      notify,
-    };
-  },
 
-  mounted() {
-    if (this.id) {
-      const project = this.store.state.projects.find(
-        (project) => project.id === this.id
+    const projectName = ref("");
+
+    if (props.id) {
+      const project = store.state.project.projects.find(
+        (project) => project.id === props.id
       );
-      this.projectName = project?.name || "";
+      projectName.value = project?.name || "";
     }
-  },
 
-  methods: {
-    handleSave() {
-      if (this.id) {
-        this.store.commit(EDIT_PROJECT, {
-          id: this.id,
-          name: this.projectName,
-        });
+    const handleSave = () => {
+      if (props.id) {
+        store
+          .dispatch(PATCH_PROJECT, {
+            id: props.id,
+            name: projectName.value,
+          })
+          .then(() => {
+            saveSuccess();
+          })
+          .catch(() => {
+            notify(
+              NotificationType.ERROR,
+              "Erro",
+              "Ocorreu um erro ao salvar o projeto"
+            );
+          });
       } else {
-        this.store.commit(ADD_PROJECT, this.projectName);
+        store
+          .dispatch(POST_PROJECT, projectName.value)
+          .then(() => {
+            saveSuccess();
+          })
+          .catch(() => {
+            notify(
+              NotificationType.ERROR,
+              "Erro",
+              "Ocorreu um erro ao salvar o projeto"
+            );
+          });
       }
-      this.projectName = "";
-      this.notify(
-        NotificationType.SUCCESS,
-        "Sucesso",
-        "Projeto salvo com sucesso"
-      );
-      this.$router.push("/projects");
-    },
+    };
+
+    const saveSuccess = () => {
+      projectName.value = "";
+      notify(NotificationType.SUCCESS, "Sucesso", "Projeto salvo com sucesso");
+      router.push("/projects");
+    };
+
+    return {
+      projectName,
+      handleSave,
+    };
   },
 });
 </script>
