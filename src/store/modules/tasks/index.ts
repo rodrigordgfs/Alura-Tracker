@@ -34,8 +34,8 @@ export const task: Module<TasksState, State> = {
       });
     },
 
-    [GET_TASKS]({ commit }) {
-      http.get("tasks").then(({ data }) => {
+    [GET_TASKS]({ commit }, filtro: string) {
+      http.get("tasks", { params: { description: filtro || null } }).then(({ data }) => {
         commit(SET_TASKS, data);
       });
     },
