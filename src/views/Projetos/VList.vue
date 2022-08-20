@@ -51,33 +51,30 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const { notify } = useNotify();
-    store.dispatch(GET_PROJECTS);
-    return {
-      store,
-      notify,
-      projects: computed(() => store.state.project.projects),
-    };
-  },
 
-  methods: {
-    handleDelete(id: string) {
-      this.store
+    store.dispatch(GET_PROJECTS);
+
+    const projects = computed(() => store.state.project.projects);
+
+    const handleDelete = (id: string) => {
+      store
         .dispatch(DELETE_PROJECT, id)
         .then(() => {
-          this.notify(
+          notify(
             NotificationType.SUCCESS,
             "Sucesso",
             "Projeto deletado com sucesso"
           );
         })
         .catch(() => {
-          this.notify(
-            NotificationType.ERROR,
-            "Erro",
-            "Erro ao deletar o projeto"
-          );
+          notify(NotificationType.ERROR, "Erro", "Erro ao deletar o projeto");
         });
-    },
+    };
+
+    return {
+      projects,
+      handleDelete,
+    };
   },
 });
 </script>

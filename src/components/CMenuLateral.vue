@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import CActionButton from "./CActionButton.vue";
 
 export default defineComponent({
@@ -36,23 +36,21 @@ export default defineComponent({
 
   components: { CActionButton },
 
-  data() {
-    return {
-      darkMode: false,
+  setup(props, { emit }) {
+    const darkMode = ref(false);
+
+    const handleChangeTheme = () => {
+      darkMode.value = !darkMode.value;
+      emit("onChangeTheme", darkMode.value);
     };
-  },
 
-  computed: {
-    themeButtonText(): string {
-      return this.darkMode ? "Ativar LightMode" : "Ativar DarkMode";
-    },
-  },
-
-  methods: {
-    handleChangeTheme(): void {
-      this.darkMode = !this.darkMode;
-      this.$emit("onChangeTheme", this.darkMode);
-    },
+    return {
+      darkMode,
+      themeButtonText: computed(() =>
+        darkMode.value ? "Ativar LightMode" : "Ativar DarkMode"
+      ),
+      handleChangeTheme,
+    };
   },
 });
 </script>

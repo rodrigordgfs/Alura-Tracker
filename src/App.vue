@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import CMenuLateral from "./components/CMenuLateral.vue";
 import CNotification from "./components/CNotification.vue";
 
@@ -26,16 +26,17 @@ export default defineComponent({
     CNotification,
   },
 
-  data() {
-    return {
-      darkMode: false,
-    };
-  },
+  setup() {
+    const darkMode = ref(false);
 
-  methods: {
-    handleChangeTheme(darkMode: boolean) {
-      this.darkMode = darkMode;
-    },
+    const handleChangeTheme = () => {
+      darkMode.value = !darkMode.value;
+    };
+
+    return {
+      darkMode,
+      handleChangeTheme,
+    };
   },
 });
 </script>

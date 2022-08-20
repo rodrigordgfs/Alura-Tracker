@@ -19,25 +19,23 @@
 <script lang="ts">
 import { NotificationType } from "@/Interfaces/INotification";
 import { useStore } from "@/store";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 
 export default defineComponent({
   name: "CNotification",
 
-  data() {
-    return {
-      type: {
-        [NotificationType.SUCCESS]: "is-success",
-        [NotificationType.INFO]: "is-info",
-        [NotificationType.ERROR]: "is-danger",
-        [NotificationType.WARNING]: "is-warning",
-      },
-    };
-  },
-
   setup() {
     const store = useStore();
+
+    const type = ref({
+      [NotificationType.SUCCESS]: "is-success",
+      [NotificationType.INFO]: "is-info",
+      [NotificationType.ERROR]: "is-danger",
+      [NotificationType.WARNING]: "is-warning",
+    });
+
     return {
+      type,
       notifications: computed(() => store.state.notifications),
     };
   },

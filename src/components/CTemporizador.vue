@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import CActionButton from "./CActionButton.vue";
 import CCronometro from "./CCronometro.vue";
 
@@ -31,28 +31,31 @@ export default defineComponent({
     CActionButton,
   },
 
-  data() {
-    return {
-      timeSeconds: 0,
-      counter: 0,
-      running: false,
-    };
-  },
+  setup(props, { emit }) {
+    const timeSeconds = ref(0);
+    const counter = ref(0);
+    const running = ref(false);
 
-  methods: {
-    handleStartCounter(): void {
-      this.running = true;
-      this.counter = setInterval(() => {
-        this.timeSeconds += 1;
+    const handleStartCounter = () => {
+      running.value = true;
+      counter.value = setInterval(() => {
+        timeSeconds.value += 1;
       }, 1000);
-    },
+    };
 
-    handleStopCounter(): void {
-      this.running = false;
-      clearInterval(this.counter);
-      this.$emit("onCounterFinish", this.timeSeconds);
-      this.timeSeconds = 0;
-    },
+    const handleStopCounter = () => {
+      running.value = false;
+      clearInterval(counter.value);
+      emit("onCounterFinish", timeSeconds.value);
+      timeSeconds.value = 0;
+    };
+
+    return {
+      timeSeconds,
+      running,
+      handleStartCounter,
+      handleStopCounter,
+    };
   },
 });
 </script>

@@ -55,7 +55,7 @@ GET_TASKS,
 PATCH_TASK,
 POST_TASK
 } from "@/store/constants/actions";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import CBox from "../components/CBox.vue";
 import CFormulario from "../components/CFormulario.vue";
 import CTarefa from "../components/CTarefa.vue";
@@ -73,69 +73,71 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const { notify } = useNotify();
+
     store.dispatch(GET_TASKS);
     store.dispatch(GET_PROJECTS);
-    return {
-      store,
-      notify,
-      tasks: computed(() => store.state.task.tasks),
-      emptyTaskList: computed(() => store.state.task.tasks.length === 0),
-    };
-  },
 
-  data() {
-    return {
-      selectedTask: null as ITask | null,
-    };
-  },
+    const selectedTask = ref(null as ITask | null);
 
-  methods: {
-    handleSaveTask(task: ITask): void {
-      this.store
+    const tasks = computed(() => store.state.task.tasks);
+    const emptyTaskList = computed(() => store.state.task.tasks.length === 0);
+
+    const handleSaveTask = (task: ITask) => {
+      store
         .dispatch(POST_TASK, task)
         .then(() => {
-          this.notify(
+          notify(
             NotificationType.SUCCESS,
             "Sucesso",
             "Tarefa salva com sucesso"
           );
         })
         .catch(() => {
-          this.notify(
+          notify(
             NotificationType.ERROR,
             "Erro",
             "Ocorreu um erro ao salvar a Tarefa"
           );
         });
-    },
+    };
 
-    handleEditTask(): void {
-      this.store
-        .dispatch(PATCH_TASK, this.selectedTask)
+    const handleEditTask = () => {
+      store
+        .dispatch(PATCH_TASK, selectedTask.value)
         .then(() => {
-          this.notify(
+          notify(
             NotificationType.SUCCESS,
             "Sucesso",
             "Tarefa salva com sucesso"
           );
-          this.handleCloseModal();
+          handleCloseModal();
         })
         .catch(() => {
-          this.notify(
+          notify(
             NotificationType.ERROR,
             "Erro",
             "Ocorreu um erro ao salvar a Tarefa"
           );
         });
-    },
+    };
 
-    handleSelectedTask(task: ITask) {
-      this.selectedTask = task;
-    },
+    const handleSelectedTask = (task: ITask) => {
+      selectedTask.value = task;
+    };
 
-    handleCloseModal() {
-      this.selectedTask = null;
-    },
+    const handleCloseModal = () => {
+      selectedTask.value = null;
+    };
+
+    return {
+      tasks,
+      emptyTaskList,
+      selectedTask,
+      handleSaveTask,
+      handleEditTask,
+      handleSelectedTask,
+      handleCloseModal,
+    };
   },
 });
 </script>

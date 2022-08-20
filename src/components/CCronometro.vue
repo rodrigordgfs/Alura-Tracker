@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 
 export default defineComponent({
   name: "CCronometro",
@@ -17,10 +17,12 @@ export default defineComponent({
     },
   },
 
-  computed: {
-    elapsedTime(): string {
-      return new Date(this.timeSeconds * 1000).toISOString().slice(11, -5);
-    },
+  setup(props) {
+    return {
+      elapsedTime: computed(() =>
+        new Date(props.timeSeconds * 1000).toISOString().slice(11, -5)
+      ),
+    };
   },
 });
 </script>

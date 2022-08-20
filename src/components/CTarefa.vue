@@ -37,10 +37,12 @@ export default defineComponent({
     },
   },
 
-  methods: {
-    handleSelectedTask(): void {
-      this.$emit("onSelectedTask", this.task);
-    },
+  setup(props, { emit }) {
+    return {
+      handleSelectedTask() {
+        emit("onSelectedTask", props.task);
+      },
+    };
   },
 });
 </script>
